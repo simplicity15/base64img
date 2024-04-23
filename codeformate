@@ -1,0 +1,45 @@
+   <?php
+
+   $host = 'localhost';
+   $user = 'root';
+   $pass = '';
+   $db_name = 'test';
+
+   $conn = mysqli_connect($host, $user, $pass, $db_name);
+
+    // note : When table create set image colom type is blob
+
+
+    if(isset($_POST['submit']))
+    {
+    $data = file_get_contents($_FILES['image']['tmp_name']);
+    $data = base64_encode($data);
+
+    $fullname = $_POST["fullname"];
+    $std = $_POST["std"];
+
+    $result= mysqli_query($conn,"INSERT INTO `student`(`fullname`, `std`, `image`) VALUES ('$fullname','$std','$data')");
+
+    if($result)
+    {
+    echo"1"; 
+    }
+    }
+
+    $result = mysqli_query($conn, "SELECT `fullname`, `std`, `image` FROM `student`");
+    while($row = mysqli_fetch_assoc($result))
+    {
+      echo '<img src="data:image/jpeg;base64,'.$row['image'].'" alt="Student Image widthe="300" Height="300" ">';
+    }
+
+?>
+
+<form method="POST" enctype="multipart/form-data">
+    <input  type="text" class="fullname" name="fullname">
+    <input type="text" class="std" name="std" /> 
+    <input type="file" name="image"/>   
+    <button type="submit" name="submit">submit</button>
+</form>
+
+
+
